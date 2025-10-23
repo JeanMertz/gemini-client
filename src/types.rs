@@ -171,6 +171,7 @@ pub struct FunctionDeclaration {
     pub name: String,
     pub description: String,
     pub parameters: Option<FunctionParameters>,
+    pub parameters_json_schema: Option<serde_json::Value>,
     pub response: Option<FunctionParameters>,
 }
 
