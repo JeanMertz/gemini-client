@@ -43,8 +43,12 @@ pub enum GeminiError {
     EventSource(#[from] reqwest_eventsource::Error),
     #[error("API Error: {0}")]
     Api(Value),
-    #[error("JSON Error: {0}")]
-    Json(#[from] serde_json::Error),
+    #[error("JSON Error: {error} (payload: {data})")]
+    Json {
+        data: String,
+        #[source]
+        error: serde_json::Error,
+    },
     #[error("Function execution error: {0}")]
     FunctionExecution(String),
 }
@@ -210,7 +214,10 @@ impl GeminiClient {
                         Event::Open => (),
                         Event::Message(event) => yield
                             serde_json::from_str::<types::GenerateContentResponse>(&event.data)
-                                .map_err(Into::into),
+                                .map_err(|error| GeminiError::Json {
+                                    data: event.data,
+                                    error,
+                                }),
                     },
                     Err(e) => match e {
                         reqwest_eventsource::Error::StreamEnded => stream.close(),
