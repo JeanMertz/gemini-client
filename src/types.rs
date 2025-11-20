@@ -346,6 +346,25 @@ pub struct ThinkingConfig {
     pub include_thoughts: bool,
     /// The number of thoughts tokens that the model should generate.
     pub thinking_budget: Option<u32>,
+    /// Controls the maximum depth of the model's internal reasoning process
+    /// before it produces a response. If not specified, the default is HIGH.
+    /// Recommended for Gemini 3 or later models. Use with earlier models
+    /// results in an error.
+    pub thinking_level: Option<ThinkingLevel>,
+}
+
+/// Allow user to specify how much to think using enum instead of integer
+/// budget.
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, Default, PartialEq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ThinkingLevel {
+    /// Unspecified thinking level.
+    #[default]
+    ThinkingLevelUnspecified,
+    /// High thinking level.
+    High,
+    /// Low thinking level.
+    Low,
 }
 
 /// A response candidate generated from the model.
