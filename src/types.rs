@@ -99,6 +99,7 @@ pub enum FunctionCallingMode {
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Content {
+    #[serde(default)]
     pub parts: Vec<ContentPart>,
     // Optional. The producer of the content. Must be either 'user' or 'model'.
     // Useful to set for multi-turn conversations, otherwise can be left blank or unset.
