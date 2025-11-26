@@ -728,6 +728,8 @@ pub struct ContentPart {
     pub data: ContentData,
     #[serde(skip_serializing)]
     pub metadata: Option<serde_json::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub thought_signature: Option<String>,
 }
 
 impl ContentPart {
@@ -736,6 +738,7 @@ impl ContentPart {
             data: ContentData::Text(text.to_string()),
             thought,
             metadata: None,
+            thought_signature: None,
         }
     }
 
@@ -747,6 +750,7 @@ impl ContentPart {
             }),
             thought,
             metadata: None,
+            thought_signature: None,
         }
     }
 
@@ -758,17 +762,25 @@ impl ContentPart {
             }),
             thought: false,
             metadata: None,
+            thought_signature: None,
         }
     }
 
-    pub fn new_function_call(name: &str, arguments: Value, thought: bool) -> Self {
+    pub fn new_function_call(
+        id: Option<&str>,
+        name: &str,
+        arguments: Value,
+        thought: bool,
+    ) -> Self {
         Self {
             data: ContentData::FunctionCall(FunctionCall {
+                id: id.map(|s| s.to_string()),
                 name: name.to_string(),
                 arguments,
             }),
             thought,
             metadata: None,
+            thought_signature: None,
         }
     }
 
@@ -779,6 +791,7 @@ impl ContentPart {
             }),
             thought: false,
             metadata: None,
+            thought_signature: None,
         }
     }
 
@@ -787,17 +800,20 @@ impl ContentPart {
             data: ContentData::CodeExecutionResult(content),
             thought: false,
             metadata: None,
+            thought_signature: None,
         }
     }
 
-    pub fn new_function_response(name: &str, content: Value) -> Self {
+    pub fn new_function_response(id: Option<&str>, name: &str, content: Value) -> Self {
         Self {
             data: ContentData::FunctionResponse(FunctionResponse {
+                id: id.map(|s| s.to_string()),
                 name: name.to_string(),
                 response: FunctionResponsePayload { content },
             }),
             thought: false,
             metadata: None,
+            thought_signature: None,
         }
     }
 }
@@ -812,6 +828,7 @@ impl From<ContentData> for ContentPart {
             data,
             thought: false,
             metadata: None,
+            thought_signature: None,
         }
     }
 }
@@ -831,14 +848,18 @@ pub enum ContentData {
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct FunctionCall {
+    #[serde(default)]
+    pub id: Option<String>,
     pub name: String,
-    #[serde(rename = "args")]
+    #[serde(default, rename = "args")]
     pub arguments: serde_json::Value,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct FunctionResponse {
+    #[serde(default)]
+    pub id: Option<String>,
     pub name: String,
     pub response: FunctionResponsePayload,
 }

@@ -268,6 +268,7 @@ impl GeminiClient {
                         Ok(result) => {
                             request.contents.push(Content {
                                 parts: vec![ContentData::FunctionResponse(FunctionResponse {
+                                    id: function_call.id.clone(),
                                     name: function_call.name.clone(),
                                     response: FunctionResponsePayload { content: result },
                                 })
