@@ -920,6 +920,8 @@ pub struct Model {
     // <https://discuss.ai.google.dev/t/basemodelid-is-not-available-in-api-response/55268>
     #[serde(skip_deserializing)]
     pub base_model_id: String,
+    #[serde(default)]
+    pub thinking: bool,
     pub version: String,
     pub display_name: String,
     pub description: Option<String>,
