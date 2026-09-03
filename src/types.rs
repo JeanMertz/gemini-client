@@ -23,6 +23,8 @@ pub struct GenerateContentRequest {
     pub tool_config: Option<ToolConfig>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub generation_config: Option<GenerationConfig>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub service_tier: Option<ServiceTier>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -932,4 +934,12 @@ pub struct Model {
     pub max_temperature: Option<f32>,
     pub top_p: Option<f32>,
     pub top_k: Option<f32>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum ServiceTier {
+    Standard,
+    Flex,
+    Priority,
 }
