@@ -378,6 +378,8 @@ pub enum ThinkingLevel {
     Medium,
     /// High thinking level.
     High,
+    /// Extra high thinking level.
+    XHigh,
 }
 
 /// A response candidate generated from the model.
