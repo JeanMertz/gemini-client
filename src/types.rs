@@ -379,6 +379,7 @@ pub enum ThinkingLevel {
     /// High thinking level.
     High,
     /// Extra high thinking level.
+    #[serde(rename = "XHIGH")]
     XHigh,
 }
 
